@@ -108,7 +108,25 @@ export default function SupplierQuotesPage() {
         return;
       }
 
-      setQuotes((data as Quote[]) || []);
+      const normalizedQuotes = (data || []).map((quote) => {
+        const inquiry = Array.isArray(quote.inquiries)
+          ? quote.inquiries[0] || null
+          : quote.inquiries;
+
+        return {
+          ...quote,
+          inquiries: inquiry
+            ? {
+              ...inquiry,
+              fabrics: Array.isArray(inquiry.fabrics)
+                ? inquiry.fabrics[0] || null
+                : inquiry.fabrics,
+            }
+            : null,
+        };
+      });
+
+      setQuotes(normalizedQuotes as Quote[]);
       setLoading(false);
     }
 

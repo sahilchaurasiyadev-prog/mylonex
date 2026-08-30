@@ -95,7 +95,14 @@ export default function SupplierInquiriesPage() {
         return;
       }
 
-      setInquiries((data as Inquiry[]) || []);
+      const normalizedInquiries = (data || []).map((inquiry) => ({
+        ...inquiry,
+        fabrics: Array.isArray(inquiry.fabrics)
+          ? inquiry.fabrics[0] || null
+          : inquiry.fabrics,
+      }));
+
+      setInquiries(normalizedInquiries as Inquiry[]);
       setLoading(false);
     }
 

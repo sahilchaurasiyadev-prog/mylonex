@@ -1,11 +1,11 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -72,7 +72,11 @@ export default function LoginPage() {
       await supabase.auth.signOut();
 
       setError(
-        `This account is registered as a ${actualRole === "supplier" ? "Supplier" : "Buyer"}. Please select the ${actualRole === "supplier" ? "Supplier" : "Buyer"} workspace to continue.`
+        `This account is registered as a ${
+          actualRole === "supplier" ? "Supplier" : "Buyer"
+        }. Please select the ${
+          actualRole === "supplier" ? "Supplier" : "Buyer"
+        } workspace to continue.`
       );
 
       setLoading(false);
@@ -100,10 +104,7 @@ export default function LoginPage() {
       <div className="mx-auto flex min-h-[80vh] max-w-md items-center justify-center">
         <div className="w-full rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
           <div className="mb-8">
-            <Link
-              href="/"
-              className="flex items-center gap-3"
-            >
+            <Link href="/" className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white">
                 M
               </div>
@@ -114,9 +115,7 @@ export default function LoginPage() {
             </Link>
 
             <h1 className="mt-8 text-2xl font-semibold tracking-tight text-zinc-900">
-              {role
-                ? `Sign in as ${roleLabel}`
-                : "Welcome back"}
+              {role ? `Sign in as ${roleLabel}` : "Welcome back"}
             </h1>
 
             <p className="mt-2 text-sm text-zinc-500">
@@ -191,5 +190,23 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-zinc-50 px-6 py-12">
+          <div className="mx-auto flex min-h-[80vh] max-w-md items-center justify-center">
+            <div className="w-full rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm">
+              <p className="text-sm text-zinc-500">Loading...</p>
+            </div>
+          </div>
+        </main>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

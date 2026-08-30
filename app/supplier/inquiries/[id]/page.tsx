@@ -113,7 +113,16 @@ export default function SupplierInquiryDetailPage() {
         return;
       }
 
-      setInquiry(data as Inquiry);
+      const normalizedInquiry = data
+        ? {
+          ...data,
+          fabrics: Array.isArray(data.fabrics)
+            ? data.fabrics[0] || null
+            : data.fabrics,
+        }
+        : null;
+
+      setInquiry(normalizedInquiry as Inquiry | null);
       setLoading(false);
     }
 

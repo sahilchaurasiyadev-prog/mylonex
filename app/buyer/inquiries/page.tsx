@@ -117,7 +117,15 @@ export default function BuyerInquiriesPage() {
       return;
     }
 
-    setInquiries((data as Inquiry[]) || []);
+    const normalizedInquiries = (data || []).map((inquiry) => ({
+      ...inquiry,
+      fabrics: Array.isArray(inquiry.fabrics)
+        ? inquiry.fabrics[0] || null
+        : inquiry.fabrics,
+      quotes: inquiry.quotes || [],
+    }));
+
+    setInquiries(normalizedInquiries as Inquiry[]);
     setLoading(false);
   }
 
@@ -252,13 +260,12 @@ export default function BuyerInquiriesPage() {
                     </div>
 
                     <span
-                      className={`inline-flex w-fit rounded-full border px-3 py-1.5 text-sm font-medium ${
-                        inquiry.status === "REJECTED"
+                      className={`inline-flex w-fit rounded-full border px-3 py-1.5 text-sm font-medium ${inquiry.status === "REJECTED"
                           ? "border-red-200 bg-red-50 text-red-700"
                           : inquiry.status === "ORDER_CONFIRMED"
                             ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                             : "border-gray-200 bg-gray-50 text-[#374151]"
-                      }`}
+                        }`}
                     >
                       {formatStatus(inquiry.status)}
                     </span>
@@ -285,35 +292,32 @@ export default function BuyerInquiriesPage() {
                             >
                               <div className="flex items-center">
                                 <div
-                                  className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full border-2 text-xs font-semibold ${
-                                    completed
+                                  className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full border-2 text-xs font-semibold ${completed
                                       ? "border-[#171717] bg-[#171717] text-white"
                                       : "border-gray-200 bg-white text-gray-400"
-                                  }`}
+                                    }`}
                                 >
                                   {index + 1}
                                 </div>
                               </div>
 
                               <p
-                                className={`mt-2 text-xs leading-5 ${
-                                  active
+                                className={`mt-2 text-xs leading-5 ${active
                                     ? "font-semibold text-[#111827]"
                                     : completed
                                       ? "font-medium text-[#374151]"
                                       : "text-gray-400"
-                                }`}
+                                  }`}
                               >
                                 {step.label}
                               </p>
 
                               {index < lifecycleSteps.length - 1 && (
                                 <div
-                                  className={`absolute left-[calc(50%+20px)] right-[calc(-50%+20px)] top-4 h-0.5 ${
-                                    currentStep > index
+                                  className={`absolute left-[calc(50%+20px)] right-[calc(-50%+20px)] top-4 h-0.5 ${currentStep > index
                                       ? "bg-[#171717]"
                                       : "bg-gray-200"
-                                  }`}
+                                    }`}
                                 />
                               )}
                             </div>
@@ -416,15 +420,14 @@ export default function BuyerInquiriesPage() {
 
                                 {inquiry.target_price !== null && (
                                   <p
-                                    className={`mt-1 text-xs ${
-                                      quote.price_per_meter <=
-                                      inquiry.target_price
+                                    className={`mt-1 text-xs ${quote.price_per_meter <=
+                                        inquiry.target_price
                                         ? "text-emerald-600"
                                         : "text-red-500"
-                                    }`}
+                                      }`}
                                   >
                                     {quote.price_per_meter <=
-                                    inquiry.target_price
+                                      inquiry.target_price
                                       ? "Within target price"
                                       : "Above target price"}
                                   </p>
