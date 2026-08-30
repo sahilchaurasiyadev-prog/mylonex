@@ -5,21 +5,21 @@ buyers with fabric suppliers. It provides a simple workflow for browsing
 fabrics, reviewing specifications, submitting sample requests or bulk
 RFQs, and managing inquiries and supplier quotations.
 
-> **Demo project:** The credentials below are for the local/demo
-> environment only. Do not use real production credentials in a public
-> repository.
+## Live Demo
 
-## Demo Credentials
+**Live Application:** https://mylonex.vercel.app/
 
-### Buyer
+### Demo Credentials
 
--   **Email:** `buyer@test.com`
--   **Password:** `123456789`
+**Buyer**
+- Email: `buyer@test.com`
+- Password: `123456789`
 
-### Supplier
+**Supplier**
+- Email: `supplier@test.com`
+- Password: `123456789`
 
--   **Email:** `supplier@test.com`
--   **Password:** `123456789`
+> **Demo project:** The credentials above are demo accounts created for evaluation purposes. Please do not use them for any real-world activity.
 
 ## Features
 
@@ -192,8 +192,8 @@ Do not commit `.env.local` or real production credentials to GitHub.
 ### 1. Clone the repository
 
 ``` bash
-git clone <your-repository-url>
-cd <your-project-folder>
+git clone https://github.com/sahilchaurasiyadev-prog/mylonex
+cd mylonex
 ```
 
 ### 2. Install dependencies
@@ -266,7 +266,6 @@ Potential next steps include:
 -   Image storage through Supabase Storage
 -   Production-ready authorization and Row Level Security policies
 -   Improved mobile navigation
--   Deployment and production environment configuration
 
 ## License
 
