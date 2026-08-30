@@ -14,6 +14,8 @@ type Fabric = {
 
 type InquiryType = "SAMPLE_REQUEST" | "BULK_RFQ";
 
+const SAMPLE_MIN_QUANTITY = 1;
+
 export default function InquiryPage() {
   const params = useParams();
   const router = useRouter();
@@ -29,6 +31,9 @@ export default function InquiryPage() {
   const [deliveryLocation, setDeliveryLocation] = useState("");
 
   const [error, setError] = useState("");
+
+  const minQuantity =
+    type === "SAMPLE_REQUEST" ? SAMPLE_MIN_QUANTITY : fabric?.moq ?? 1;
 
   useEffect(() => {
     async function loadFabric() {
@@ -75,9 +80,11 @@ export default function InquiryPage() {
       return;
     }
 
-    if (requestedQuantity < fabric.moq) {
+    if (requestedQuantity < minQuantity) {
       setError(
-        `Minimum order quantity for this fabric is ${fabric.moq.toLocaleString()}m.`
+        type === "SAMPLE_REQUEST"
+          ? `Minimum sample quantity is ${minQuantity}m.`
+          : `Minimum order quantity for this fabric is ${minQuantity.toLocaleString()}m.`
       );
       return;
     }
@@ -206,19 +213,17 @@ export default function InquiryPage() {
                 <button
                   type="button"
                   onClick={() => setType("SAMPLE_REQUEST")}
-                  className={`rounded-xl border px-4 py-4 text-left transition ${
-                    type === "SAMPLE_REQUEST"
-                      ? "border-zinc-900 bg-zinc-900 text-white"
-                      : "border-zinc-200 bg-white text-zinc-900 hover:border-zinc-400"
-                  }`}
+                  className={`rounded-xl border px-4 py-4 text-left transition ${type === "SAMPLE_REQUEST"
+                    ? "border-zinc-900 bg-zinc-900 text-white"
+                    : "border-zinc-200 bg-white text-zinc-900 hover:border-zinc-400"
+                    }`}
                 >
                   <p className="font-medium">Sample Request</p>
                   <p
-                    className={`mt-1 text-xs ${
-                      type === "SAMPLE_REQUEST"
-                        ? "text-zinc-300"
-                        : "text-zinc-500"
-                    }`}
+                    className={`mt-1 text-xs ${type === "SAMPLE_REQUEST"
+                      ? "text-zinc-300"
+                      : "text-zinc-500"
+                      }`}
                   >
                     Request fabric samples
                   </p>
@@ -227,19 +232,17 @@ export default function InquiryPage() {
                 <button
                   type="button"
                   onClick={() => setType("BULK_RFQ")}
-                  className={`rounded-xl border px-4 py-4 text-left transition ${
-                    type === "BULK_RFQ"
-                      ? "border-zinc-900 bg-zinc-900 text-white"
-                      : "border-zinc-200 bg-white text-zinc-900 hover:border-zinc-400"
-                  }`}
+                  className={`rounded-xl border px-4 py-4 text-left transition ${type === "BULK_RFQ"
+                    ? "border-zinc-900 bg-zinc-900 text-white"
+                    : "border-zinc-200 bg-white text-zinc-900 hover:border-zinc-400"
+                    }`}
                 >
                   <p className="font-medium">Bulk Production RFQ</p>
                   <p
-                    className={`mt-1 text-xs ${
-                      type === "BULK_RFQ"
-                        ? "text-zinc-300"
-                        : "text-zinc-500"
-                    }`}
+                    className={`mt-1 text-xs ${type === "BULK_RFQ"
+                      ? "text-zinc-300"
+                      : "text-zinc-500"
+                      }`}
                   >
                     Request production pricing
                   </p>
@@ -259,18 +262,20 @@ export default function InquiryPage() {
               <input
                 id="quantity"
                 type="number"
-                min={fabric.moq}
+                min={minQuantity}
                 value={quantity}
                 onChange={(event) => setQuantity(event.target.value)}
-                placeholder={`Minimum ${fabric.moq.toLocaleString()}m`}
+                placeholder={`Minimum ${minQuantity.toLocaleString()}m`}
                 className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm outline-none transition focus:border-zinc-900"
                 required
               />
 
               <p className="mt-2 text-xs text-zinc-500">
-                Minimum order quantity:{" "}
+                {type === "SAMPLE_REQUEST"
+                  ? "Minimum sample quantity:"
+                  : "Minimum order quantity:"}{" "}
                 <span className="font-medium text-zinc-700">
-                  {fabric.moq.toLocaleString()}m
+                  {minQuantity.toLocaleString()}m
                 </span>
               </p>
             </div>
